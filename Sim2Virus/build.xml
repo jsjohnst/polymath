@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Sim2Virus" default="compile" basedir=".">
+    <property name="src" location="src"/> <!-- java source folder -->
+    <property name="bin" location="bin"/> <!-- java bin -->
+	<property name="build" location="build"/> <!-- intermediate build products -->
+    <property name="compile.debug" value="true"/>
+
+    <!-- source and target below, may need to be adjusted based on what version of Java is being used -->
+    <target name="compile" description="Compile code">
+	<mkdir dir="${bin}"/>
+	<javac deprecation="off" srcdir="${src}" destdir="${bin}"
+	       source="1.5" target="1.5"
+	       includeAntRuntime="no"
+	       debug="${compile.debug}">
+	</javac>
+    </target>
+
+    <target name="run" depends="compile" description="Run the double-clickable application">
+        <!-- Use the exec task to open the application -->
+        <exec dir="${bin}" executable="/usr/bin/java" os="Mac OS X">
+            <arg line="Virus"/>
+        </exec>
+		
+    </target>
+
+    <target name="clean" description="Remove build and dist directories">
+	<delete>
+	    <fileset dir="${bin}"  followsymlinks="no"/>
+		<fileset dir="${build}"  followsymlinks="no"/>
+	</delete>
+    </target>
+</project>
