@@ -7,21 +7,25 @@ $tables[$table_count] = array();
 foreach(file("data.txt") as $line) {
 	if(trim($line) == "") {
 		$table_count++;
-		$tables[$table_count] = array();
 		continue;
+	}
+	if(!is_array($tables[$table_count])) {
+		$tables[$table_count] = array();
 	}
 	$tables[$table_count][] = explode(" ", $line);
 }
+
+$tables = array_reverse($tables);
+
+$first_row = count($tables[0]); // set to the maximum number of rows
+$left_col = count($tables[0][0]); // set to the # of columns in first row, should be good enough
+$right_col = 0;
+$last_row = 0;
 
 $ouput = "";
 
 foreach($tables as $table) {
 	if(count($table) < 1) continue;
-	
-	$first_row = count($table);
-	$left_col = count($table[0]);
-	$right_col = 0;
-	$last_row = 0;
 
 	foreach($table as $rcount=>$row) {
 		foreach($row as $ccount=>$col) {
@@ -48,12 +52,12 @@ foreach($tables as $table) {
 		if($rcount < $first_row) continue;
 		if($rcount > $last_row) break;
 
-		$output .= implode(" ", array_slice($row, $left_col, $right_col - $left_col)) . "\n";
+		$output .= implode(" ", array_slice($row, $left_col, $right_col - $left_col)) . " ";
 	}
 	
-	printf("%d x %d\n\n", $right_col - $left_col, $last_row - $first_row);
-	
 	$output .= "\n";
+	
+	printf("%d x %d\n\n", $right_col - $left_col, $last_row - $first_row);
 }
 
 file_put_contents("output.txt", $output);
