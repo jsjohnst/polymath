@@ -19,7 +19,9 @@ public class Virus extends Applet {
     
 	// The frame and panel for displaying statistics
 	Frame statframe;
+	Frame statframe2;
 	StatArea statdisparea;
+	StatArea statdisparea2;
 		
     public void init() {
 		statframe = new Frame("Stats");
@@ -27,6 +29,12 @@ public class Virus extends Applet {
 		statframe.setSize(500, 600);
 		statframe.add(statdisparea);
 		statframe.setVisible( true );
+		
+		statframe2 = new Frame("Stats2");
+		statdisparea2 = new StatArea();
+		statframe2.setSize(500, 600);
+		statframe2.add(statdisparea2);
+		statframe2.setVisible( true );
 		
 		statdisparea.addString( "The leftmost column is the time and the\n" );
 		statdisparea.addString( "next column is the number of cells that are\n" );
@@ -36,7 +44,7 @@ public class Virus extends Applet {
 		statdisparea.addString( "a mix of red and green.\n\n" );		
 		
 		setLayout(new BorderLayout());
-		DisplayCanvas dispcan = new DisplayCanvas( statdisparea );
+		DisplayCanvas dispcan = new DisplayCanvas( statdisparea, statdisparea2 );
 		add("Center", dispcan);
 		add("North", controls = new ControlPanel( dispcan ));
     }

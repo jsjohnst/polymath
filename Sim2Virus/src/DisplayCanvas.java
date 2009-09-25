@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.applet.*;
 import java.util.*;
+import java.io.Console;
 import java.lang.Math.*;
 
 /*
@@ -101,6 +102,7 @@ class DisplayCanvas extends Canvas {
 	
 	// The canvas in the statistics frame
 	StatArea statdisparea;
+	StatArea statdisparea2;
 	
 	/*
 	 * Method enter_virus is called for each infectible cell
@@ -377,8 +379,9 @@ class DisplayCanvas extends Canvas {
 	 * and the instance of Statarea used to display statistics in a
 	 * separate frame (window)
 	 */
-	public DisplayCanvas( StatArea sda ) {
+	public DisplayCanvas( StatArea sda, StatArea sda2 ) {
 		statdisparea = sda;
+		statdisparea2 = sda2;
 		
 		colormode = both;
 		show_border = false;
@@ -558,6 +561,7 @@ class DisplayCanvas extends Canvas {
 					gtable[255*cell_green[0][row][col]/max_green] );
 				else if (colormode == red_only) g.setColor(
 					rtable[255*cell_red[0][row][col]/max_red] );
+				
 				g.drawLine( 2*col+Math.abs(1+row-SIZE),
 					row,
 					2*col+Math.abs(1+row-SIZE)+1,
@@ -716,118 +720,137 @@ class DisplayCanvas extends Canvas {
 	 *      long it remains infectible (how long it retains its receptor)
 	 *   superInf - a boolean specifying whether superinfection is allowed
 	 */
-    public void iterate(int iterations, double inf_rate, int max_red_age,
-    	int max_green_age, int min_infect, int max_infect, boolean superInf) {
+    public void iterate(int iterations, double inf_rate, int max_red_age, int max_green_age, int min_infect, int max_infect, boolean superInf) {
     
-    // bins for calculating statistcs to be displayed in statistics frame
-    int bin[] = new int[12];
-    int binnum, denom;
+    	// bins for calculating statistcs to be displayed in statistics frame
+    	int bin[] = new int[12];
+    	int binnum, denom;
     	
-	while (iterations > 0) {
-	    timestep++; iterations--;
-	    for (int row=1; row<2*SIZE-2; row++) {
-		  for (int col=1; col<cell_state[row].length-1; col++)       // avoid edges
-		    
-		    // Handle cell state transitions
-		    if (cell_state[row][col] == normal) {
-			  if ((Math.abs( randval.nextInt() ) % 10000) < 10000*inf_rate) {
-			  	cell_state[row][col] = infectible;
-			  	cell_timer[row][col] = min_infect +
-			  		Math.abs( randval.nextInt() ) % (1 + max_infect - min_infect);
-			  }
-		    }
-		    else if (cell_state[row][col] == infectible) {
-				if (--cell_timer[row][col] <= 0) cell_state[row][col] = normal;
+		while (iterations > 0) {
+		    timestep++; iterations--;
+		    for (int row=1; row<2*SIZE-2; row++) {
+				for (int col=1; col<cell_state[row].length-1; col++) {      // avoid edges
+			    
+				    // Handle cell state transitions
+				    if (cell_state[row][col] == normal) {
+					  if ((Math.abs( randval.nextInt() ) % 10000) < 10000*inf_rate) {
+					  	cell_state[row][col] = infectible;
+					  	cell_timer[row][col] = min_infect +
+					  		Math.abs( randval.nextInt() ) % (1 + max_infect - min_infect);
+					  }
+				    }
+				    else if (cell_state[row][col] == infectible) {
+						if (--cell_timer[row][col] <= 0) cell_state[row][col] = normal;
+					}
+				    else if (cell_state[row][col] == infected1) {
+				    	cell_state[row][col] = infected2;
+				    	cell_timer[row][col]--;
+				    }
+				    else if (cell_state[row][col] == infected2) {
+				    	bud( row, col, max_red_age, max_green_age, superInf );
+				    	cell_state[row][col] = infected3;
+				    	cell_timer[row][col]--;
+				    }
+				    else if (cell_state[row][col] == infected3) {
+				    	cell_state[row][col] = infected4;
+				    	cell_timer[row][col]--;
+				    }
+				    else if (cell_state[row][col] == infected4) {
+				    	if (--cell_timer[row][col] <= 0)
+				    		cell_state[row][col] = deceased;
+				    	else {
+				    		bud( row, col, max_red_age, max_green_age, superInf );
+				    		cell_state[row][col] = infected5;
+				    	}
+				    }
+				    else if (cell_state[row][col] == infected5) {
+				    	if (--cell_timer[row][col] <= 0)
+				    		cell_state[row][col] = deceased;
+				    	else cell_state[row][col] = infected6;
+				    }
+				    else if (cell_state[row][col] == infected6) {
+				    	bud( row, col, max_red_age, max_green_age, superInf );
+				    	cell_state[row][col] = deceased;
+				    }
+				}
 			}
-		    else if (cell_state[row][col] == infected1) {
-		    	cell_state[row][col] = infected2;
-		    	cell_timer[row][col]--;
-		    }
-		    else if (cell_state[row][col] == infected2) {
-		    	bud( row, col, max_red_age, max_green_age, superInf );
-		    	cell_state[row][col] = infected3;
-		    	cell_timer[row][col]--;
-		    }
-		    else if (cell_state[row][col] == infected3) {
-		    	cell_state[row][col] = infected4;
-		    	cell_timer[row][col]--;
-		    }
-		    else if (cell_state[row][col] == infected4) {
-		    	if (--cell_timer[row][col] <= 0)
-		    		cell_state[row][col] = deceased;
-		    	else {
-		    		bud( row, col, max_red_age, max_green_age, superInf );
-		    		cell_state[row][col] = infected5;
-		    	}
-		    }
-		    else if (cell_state[row][col] == infected5) {
-		    	if (--cell_timer[row][col] <= 0)
-		    		cell_state[row][col] = deceased;
-		    	else cell_state[row][col] = infected6;
-		    }
-		    else if (cell_state[row][col] == infected6) {
-		    	bud( row, col, max_red_age, max_green_age, superInf );
-		    	cell_state[row][col] = deceased;
-		    }
-		}
 		
-		// Scan through array, aging viruses outside cells and
-		// allowing viruses to enter infectible cells
-	    for (int row=1; row<2*SIZE-2; row++)
-		  for (int col=1; col<cell_state[row].length-1; col++) {
-			if (cell_state[row][col] == normal) {
-			  for (int i=2; i<5; i++) {
-			  	cell_red[i-1][row][col] = cell_red[i][row][col];
-			  	cell_green[i-1][row][col] = cell_green[i][row][col];
-			  }
-			  cell_red[4][row][col] = 0;
-			  cell_green[4][row][col] = 0;
+			// Scan through array, aging viruses outside cells and
+			// allowing viruses to enter infectible cells
+		    for (int row=1; row<2*SIZE-2; row++) {
+				for (int col=1; col<cell_state[row].length-1; col++) {
+					if (cell_state[row][col] == normal) {
+						for (int i=2; i<5; i++) {
+							cell_red[i-1][row][col] = cell_red[i][row][col];
+							cell_green[i-1][row][col] = cell_green[i][row][col];
+						}
+						cell_red[4][row][col] = 0;
+						cell_green[4][row][col] = 0;
+					}
+					else if (cell_state[row][col] == infectible) {
+					  enter_virus( row, col, superInf );
+					}
+				}
 			}
-			else if (cell_state[row][col] == infectible) {
-			  enter_virus( row, col, superInf );
+		
+			if ( timestep == RedTime ) {
+				initFocus( RedOffset, (int)(Red_MOI*red_focal_size), 0, redfocustype, red_focal_radius );		
 			}
-		}
 		
-		if ( timestep == RedTime )
-			initFocus( RedOffset, (int)(Red_MOI*red_focal_size), 0, redfocustype, red_focal_radius );		
-		
-		// Calculate and display statistics
-		for (int i=0; i<12; i++) bin[i] = 0;
-	    for (int row=1; row<2*SIZE-2; row++)
-		  for (int col=1; col<cell_state[row].length-1; col++) {
-			denom = cell_green[0][row][col]+cell_red[0][row][col];
-			if (denom > 0) {
-				binnum = 255*cell_red[0][row][col]/denom;
-				if (binnum == 0) bin[0]++;
-				else if (binnum == 255) bin[11]++;
-				else if (binnum < 26) bin[1]++;
-				else if (binnum > 230) bin[10]++;
-				else if (binnum < 52) bin[2]++;
-				else if (binnum > 204) bin[9]++;
-				else if (binnum < 77) bin[3]++;
-				else if (binnum > 179) bin[8]++;
-				else if (binnum < 103) bin[4]++;
-				else if (binnum > 153) bin[7]++;
-				else if (binnum < 128) bin[5]++;
-				else bin[6]++;
-			}  
-		  }
-		statdisparea.addString( timestep+"\t"+bin[0]+"\t"+bin[1]+"\t"+
-		  	bin[2]+"\t"+bin[3]+"\t"+bin[4]+"\t"+bin[5]+"\t"+bin[6]+"\t"+
-		  	bin[7]+"\t"+bin[8]+"\t"+bin[9]+"\t"+bin[10]+"\t"+bin[11]+"\n" );   
+			// Calculate and display statistics
+			for (int i=0; i<12; i++) bin[i] = 0;
+			
+			for (int row=1; row<2*SIZE-2; row++) {
+				String rowData = "";
+				
+				for (int col=1; col<cell_state[row].length-1; col++) {
+					denom = cell_green[0][row][col]+cell_red[0][row][col];
+					if (denom > 0) {
+						binnum = 255*cell_red[0][row][col]/denom;
+						if (binnum == 0) bin[0]++;
+						else if (binnum == 255) bin[11]++;
+						else if (binnum < 26) bin[1]++;
+						else if (binnum > 230) bin[10]++;
+						else if (binnum < 52) bin[2]++;
+						else if (binnum > 204) bin[9]++;
+						else if (binnum < 77) bin[3]++;
+						else if (binnum > 179) bin[8]++;
+						else if (binnum < 103) bin[4]++;
+						else if (binnum > 153) bin[7]++;
+						else if (binnum < 128) bin[5]++;
+						else bin[6]++;
+					
+						rowData = rowData.concat(binnum < 128 ? "1 " : "2 ");
+					}  else {
+						rowData = rowData.concat("0 ");
+					}
+				}
+				
+				if(rowData.contains("1") || rowData.contains("2")) {
+					statdisparea2.addString(rowData + "\n");
+				}			
+			} 
+			statdisparea.addString( timestep+"\t"+bin[0]+"\t"+bin[1]+"\t"+
+					bin[2]+"\t"+bin[3]+"\t"+bin[4]+"\t"+bin[5]+"\t"+bin[6]+"\t"+
+					bin[7]+"\t"+bin[8]+"\t"+bin[9]+"\t"+bin[10]+"\t"+bin[11]+"\n" );   
 		}
+	
 		
 		// After main loop, calculate new values for max_red and max_green
 		max_red = 0;
 		max_green = 0;
-	    for (int row=1; row<2*SIZE-2; row++)
-		  for (int col=1; col<cell_state[row].length-1; col++)
-			if ((cell_red[0][row][col]+cell_green[0][row][col]) > 0) {
-				if (cell_red[0][row][col] > max_red)
-					max_red = cell_red[0][row][col];
-				if (cell_green[0][row][col] > max_green)
-					max_green = cell_green[0][row][col];
-		    }
+	    for (int row=1; row<2*SIZE-2; row++) {
+			for (int col=1; col<cell_state[row].length-1; col++) {
+				if ((cell_red[0][row][col]+cell_green[0][row][col]) > 0) {
+					if (cell_red[0][row][col] > max_red) {
+						max_red = cell_red[0][row][col];
+					}
+					if (cell_green[0][row][col] > max_green) {
+						max_green = cell_green[0][row][col];
+					}
+				}
+			}
+	    }
 		repaint();
 	}
 }
