@@ -16,6 +16,8 @@ foreach(file("data.txt") as $line) {
 $ouput = "";
 
 foreach($tables as $table) {
+	if(count($table) < 1) continue;
+	
 	$first_row = count($table);
 	$left_col = count($table[0]);
 	$right_col = 0;
