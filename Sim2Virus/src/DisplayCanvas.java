@@ -598,7 +598,7 @@ class DisplayCanvas extends Canvas {
 		}
 		
 		if(fileout != null) {
-			fileout.println("\n");
+			fileout.println(" ");
 		}
 		
 		// If desired, a thin black line is drawn around the foci
