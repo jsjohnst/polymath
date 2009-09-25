@@ -3,6 +3,8 @@ import java.awt.event.*;
 import java.applet.*;
 import java.util.*;
 import java.io.Console;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.lang.Math.*;
 
 /*
@@ -103,6 +105,8 @@ class DisplayCanvas extends Canvas {
 	// The canvas in the statistics frame
 	StatArea statdisparea;
 	StatArea statdisparea2;
+	
+	PrintStream fileout;
 	
 	/*
 	 * Method enter_virus is called for each infectible cell
@@ -379,9 +383,10 @@ class DisplayCanvas extends Canvas {
 	 * and the instance of Statarea used to display statistics in a
 	 * separate frame (window)
 	 */
-	public DisplayCanvas( StatArea sda, StatArea sda2 ) {
-		statdisparea = sda;
-		statdisparea2 = sda2;
+	public DisplayCanvas( StatArea sda, StatArea sda2, PrintStream p ) {
+//		statdisparea = sda;
+//		statdisparea2 = sda2;
+//		fileout = p;
 		
 		colormode = both;
 		show_border = false;
@@ -447,9 +452,18 @@ class DisplayCanvas extends Canvas {
     				int maxredage, int maxgreenage,
     				String red_focus_type, String green_focus_type,
     				double inf_rate, boolean superInf,
-    				int deltaX, int deltaT) {
+    				int deltaX, int deltaT, String filename) {
     
 		int i, row, col;
+		
+		try {
+			FileOutputStream output = new FileOutputStream(filename);
+			fileout = new PrintStream(output);	
+			
+			System.out.println("Opening: " + filename);
+		} catch(Exception e) {
+			System.err.println("error!");
+		}
 		
 		red_focal_radius = RedRadius;
 		green_focal_radius = GreenRadius;
@@ -547,7 +561,8 @@ class DisplayCanvas extends Canvas {
 	 * Each cell is represented by two pixels.
 	 */
     public void paint(Graphics g) {
-		for (int row=0; row<2*SIZE-1; row++)
+		for (int row=0; row<2*SIZE-1; row++) {
+			String output = "";
 			for (int col=0; col<cell_state[row].length; col++) {
 				if ((cell_state[row][col] == normal) ||
 					(cell_state[row][col] == infectible))
@@ -566,7 +581,25 @@ class DisplayCanvas extends Canvas {
 					row,
 					2*col+Math.abs(1+row-SIZE)+1,
 					row);
+				
+				int denom = cell_green[0][row][col]+cell_red[0][row][col];
+				if (denom > 0) {
+					int binnum = 255*cell_red[0][row][col]/denom;
+				
+					output = output.concat(binnum < 128 ? "1 " : "2 ");
+				}  else {
+					output = output.concat("0 ");
+				}
 			}
+			
+			if(fileout != null) {
+				fileout.println(output);
+			}
+		}
+		
+		if(fileout != null) {
+			fileout.println("\n");
+		}
 		
 		// If desired, a thin black line is drawn around the foci
 		g.setColor(Color.black);
@@ -801,7 +834,7 @@ class DisplayCanvas extends Canvas {
 			for (int i=0; i<12; i++) bin[i] = 0;
 			
 			for (int row=1; row<2*SIZE-2; row++) {
-				String rowData = "";
+//				String rowData = "";
 				
 				for (int col=1; col<cell_state[row].length-1; col++) {
 					denom = cell_green[0][row][col]+cell_red[0][row][col];
@@ -820,20 +853,20 @@ class DisplayCanvas extends Canvas {
 						else if (binnum < 128) bin[5]++;
 						else bin[6]++;
 					
-						rowData = rowData.concat(binnum < 128 ? "1 " : "2 ");
+//						rowData = rowData.concat(binnum < 128 ? "1 " : "2 ");
 					}  else {
-						rowData = rowData.concat("0 ");
+//						rowData = rowData.concat("0 ");
 					}
 				}
 				
-				if(rowData.contains("1") || rowData.contains("2")) {
-					statdisparea2.addString(rowData + "\n");
-				}			
+//				statdisparea2.addString(rowData + "\n");		
 			} 
-			statdisparea.addString( timestep+"\t"+bin[0]+"\t"+bin[1]+"\t"+
-					bin[2]+"\t"+bin[3]+"\t"+bin[4]+"\t"+bin[5]+"\t"+bin[6]+"\t"+
-					bin[7]+"\t"+bin[8]+"\t"+bin[9]+"\t"+bin[10]+"\t"+bin[11]+"\n" );   
+//			statdisparea.addString( timestep+"\t"+bin[0]+"\t"+bin[1]+"\t"+
+//					bin[2]+"\t"+bin[3]+"\t"+bin[4]+"\t"+bin[5]+"\t"+bin[6]+"\t"+
+//					bin[7]+"\t"+bin[8]+"\t"+bin[9]+"\t"+bin[10]+"\t"+bin[11]+"\n" );   
 		}
+		
+//		statdisparea2.addString("\n");
 	
 		
 		// After main loop, calculate new values for max_red and max_green

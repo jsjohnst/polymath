@@ -76,6 +76,7 @@ class ControlPanel extends Panel
     TextField MaxField;
     TextField DeltaXField;
     TextField DeltaTField;
+    TextField Filename;
     CheckboxGroup SuperButtons;
     Checkbox SuperYes, SuperNo;
     DisplayCanvas canvas;
@@ -153,7 +154,7 @@ class ControlPanel extends Panel
 		add(new Label("% infectible"));
 		add(new Label("Min RRT"));
 		add(new Label("Max RRT"));
-		add(new Label(" "));
+		add(new Label("Filename"));
 		add(new Label("Iterations"));
 		add(new Label(" "));
 
@@ -162,7 +163,7 @@ class ControlPanel extends Panel
 		add(RateField = new TextField("5.0", 5));
 		add(MinField = new TextField("8", 4));
 		add(MaxField = new TextField("12", 4));
-		add(new Label(" "));
+		add(Filename = new TextField("data.txt", 4));
 		add(IterField = new TextField("15", 4));
 		add(new Label(" "));
 		
@@ -189,7 +190,7 @@ class ControlPanel extends Panel
 				RedShape.getSelectedItem().trim(), GreenShape.getSelectedItem().trim(),
 				inf_rate, SuperYes.getState(),
 				Integer.parseInt(DeltaXField.getText().trim()),
-				Integer.parseInt(DeltaTField.getText().trim()));
+				Integer.parseInt(DeltaTField.getText().trim()), Filename.getText().trim());
 			initflag = true;
 			canvas.iterate(Integer.parseInt(IterField.getText().trim()),
 				inf_rate, Integer.parseInt(RedAgeChoice.getSelectedItem().trim()),
@@ -211,7 +212,7 @@ class ControlPanel extends Panel
 				RedShape.getSelectedItem().trim(), GreenShape.getSelectedItem().trim(),
 				inf_rate, SuperYes.getState(),
 				Integer.parseInt(DeltaXField.getText().trim()),
-				Integer.parseInt(DeltaTField.getText().trim()));
+				Integer.parseInt(DeltaTField.getText().trim()), Filename.getText().trim());
 			initflag = true;
 		}
 		canvas.repaint();

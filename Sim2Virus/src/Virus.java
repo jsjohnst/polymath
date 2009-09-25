@@ -2,6 +2,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.applet.*;
 import java.util.*;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.lang.Math.*;
 
 /*
@@ -22,31 +24,41 @@ public class Virus extends Applet {
 	Frame statframe2;
 	StatArea statdisparea;
 	StatArea statdisparea2;
+	
+	PrintStream pstr;
 		
     public void init() {
-		statframe = new Frame("Stats");
-		statdisparea = new StatArea();
-		statframe.setSize(500, 600);
-		statframe.add(statdisparea);
-		statframe.setVisible( true );
-		
-		statframe2 = new Frame("Stats2");
-		statdisparea2 = new StatArea();
-		statframe2.setSize(500, 600);
-		statframe2.add(statdisparea2);
-		statframe2.setVisible( true );
-		
-		statdisparea.addString( "The leftmost column is the time and the\n" );
-		statdisparea.addString( "next column is the number of cells that are\n" );
-		statdisparea.addString( "all green.  The rightmost column is the number\n" );
-		statdisparea.addString( "of cells that are all red.  The remaining columns\n" );
-		statdisparea.addString( "are ten percentile counts for cells that have\n" );
-		statdisparea.addString( "a mix of red and green.\n\n" );		
+//		statframe = new Frame("Stats");
+//		statdisparea = new StatArea();
+//		statframe.setSize(500, 600);
+//		statframe.add(statdisparea);
+//		statframe.setVisible( true );
+//		
+//		statframe2 = new Frame("Stats2");
+//		statdisparea2 = new StatArea();
+//		statframe2.setSize(500, 600);
+//		statframe2.add(statdisparea2);
+//		statframe2.setVisible( true );
+//		
+//		statdisparea.addString( "The leftmost column is the time and the\n" );
+//		statdisparea.addString( "next column is the number of cells that are\n" );
+//		statdisparea.addString( "all green.  The rightmost column is the number\n" );
+//		statdisparea.addString( "of cells that are all red.  The remaining columns\n" );
+//		statdisparea.addString( "are ten percentile counts for cells that have\n" );
+//		statdisparea.addString( "a mix of red and green.\n\n" );		
 		
 		setLayout(new BorderLayout());
-		DisplayCanvas dispcan = new DisplayCanvas( statdisparea, statdisparea2 );
-		add("Center", dispcan);
-		add("North", controls = new ControlPanel( dispcan ));
+		
+		try {
+//			FileOutputStream output = new FileOutputStream("data.txt");
+//			pstr = new PrintStream(output);
+			
+			DisplayCanvas dispcan = new DisplayCanvas( statdisparea, statdisparea2, pstr );
+			add("Center", dispcan);
+			add("North", controls = new ControlPanel( dispcan ));			
+		} catch(Exception e) {
+			System.err.println("error!");
+		}
     }
 
     public void start() {
