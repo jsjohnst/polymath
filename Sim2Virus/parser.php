@@ -23,8 +23,6 @@ $left_col = PHP_INT_MAX;
 $right_col = 0;
 $last_row = 0;
 
-$fp = fopen("output.txt", "w");
-
 foreach($tables as $serialized_table) {
 	$table = unserialize($serialized_table);
 	if(count($table) < 1) continue;
@@ -47,7 +45,16 @@ foreach($tables as $serialized_table) {
 			}
 		}
 	}
+}
 
+$tables = array_reverse($tables);
+
+$fp = fopen("output.txt", "w");
+
+foreach($tables as $serialized_table) {
+	$table = unserialize($serialized_table);
+	if(count($table) < 1) continue;
+	
 	foreach($table as $rcount=>$row) {
 		if($rcount < $first_row) continue;
 		if($rcount > $last_row) break;
