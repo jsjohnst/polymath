@@ -1,30 +1,32 @@
 <?php
 
 $tables = array();
-$table_count = 0;
-$tables[$table_count] = array();
+$table = array();
+
+print("Starting data loading\n");
 
 foreach(file("data.txt") as $line) {
 	if(trim($line) == "") {
-		$table_count++;
+		$tables[] = serialize($table);
+		$table = array();
 		continue;
 	}
-	if(!is_array($tables[$table_count])) {
-		$tables[$table_count] = array();
-	}
-	$tables[$table_count][] = explode(" ", $line);
+	$table[] = explode(" ", $line);
 }
+
+print("Data loaded.\n");
 
 $tables = array_reverse($tables);
 
-$first_row = count($tables[0]); // set to the maximum number of rows
-$left_col = count($tables[0][0]); // set to the # of columns in first row, should be good enough
+$first_row = PHP_INT_MAX;
+$left_col = PHP_INT_MAX;
 $right_col = 0;
 $last_row = 0;
 
-$ouput = "";
+$fp = fopen("output.txt", "w");
 
-foreach($tables as $table) {
+foreach($tables as $serialized_table) {
+	$table = unserialize($serialized_table);
 	if(count($table) < 1) continue;
 
 	foreach($table as $rcount=>$row) {
@@ -46,19 +48,19 @@ foreach($tables as $table) {
 		}
 	}
 
-
-
 	foreach($table as $rcount=>$row) {
 		if($rcount < $first_row) continue;
 		if($rcount > $last_row) break;
 
-		$output .= implode(" ", array_slice($row, $left_col, $right_col - $left_col)) . " ";
+		fwrite($fp, implode(" ", array_slice($row, $left_col, $right_col - $left_col)) . " ");
 	}
 	
-	$output .= "\n";
+	fwrite($fp, "\n");
 	
-	printf("%d x %d\n\n", $right_col - $left_col, $last_row - $first_row);
+	printf("Found and output table with dimensions: %d x %d\n", $right_col - $left_col, $last_row - $first_row);
 }
 
-file_put_contents("output.txt", $output);
+fclose($fp);
+
+print("Done!\n");
 
