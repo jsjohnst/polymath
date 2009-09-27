@@ -15,12 +15,12 @@ void read_input_data(MATRIX& dataset, char const *filename) {
     ROW row = ROW();
     TABLE table = TABLE();
 
-    current = fgetc(input);
+    current = getc_unlocked(input);
 
     while( current != EOF ) {
         switch (current) {
             case 32:
-                current = fgetc(input);
+                current = getc_unlocked(input);
 				continue;
             case 10:
                 if(previous == 10 && 0 != table.size()) {
@@ -47,7 +47,7 @@ void read_input_data(MATRIX& dataset, char const *filename) {
 loop_end:		
         previous = current;
 loop_end2:
-        current = fgetc(input);
+        current = getc_unlocked(input);
     }
 
     fclose(input);
