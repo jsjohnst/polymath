@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-c -ftemplate-depth-128 -O3 -finline-functions -Wno-inline -Wall -gdwarf-2 -gp
+CFLAGS=-c -ftemplate-depth-128 -O3 -finline-functions -Wno-inline -Wall -gdwarf-2 
 
 parser: Parser.o Reader.o Analyzer.o Printer.o
 	$(CC) Parser.o Reader.o Analyzer.o Printer.o -o parser
