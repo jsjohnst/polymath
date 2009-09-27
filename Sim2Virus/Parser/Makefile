@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-c -ftemplate-depth-128 -O3 -finline-functions -Wno-inline -Wall -gdwarf-2
+CFLAGS=-c -ftemplate-depth-128 -O3 -finline-functions -Wno-inline -Wall -gdwarf-2 -gp
 
 parser: Parser.o Reader.o Analyzer.o Printer.o
 	$(CC) Parser.o Reader.o Analyzer.o Printer.o -o parser
@@ -17,4 +17,4 @@ Printer.o: Printer.cpp
 	$(CC) Printer.cpp $(CFLAGS)
 	
 clean:
-	rm *.o parser
+	rm -rf *.o parser

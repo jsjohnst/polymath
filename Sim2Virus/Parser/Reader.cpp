@@ -10,7 +10,7 @@ MATRIX read_input_data(const char *filename) {
 	inputstream.open(filename);
 
 	ROW row = ROW();
-	TABLE table = TABLE();
+	TABLE table = TABLE(400);
 	while(inputstream.good()) {
 		current = inputstream.get();
 		if(current == 32) {
@@ -19,7 +19,7 @@ MATRIX read_input_data(const char *filename) {
 		if(current == 10) {
 			if(previous == 10) {
 				dataset.push_back(table);
-				table = TABLE();
+				table = TABLE(400);
 				continue;
 			}
 			previous = current;
