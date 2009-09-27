@@ -17,6 +17,8 @@ void read_input_data(MATRIX& dataset, char const *filename) {
 
     current = getc_unlocked(input);
 
+	// this works despite current defined as a char
+	// bad practice, yes, but works for our needs
     while( current != EOF ) {
         switch (current) {
             case 32:
