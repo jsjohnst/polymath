@@ -1,10 +1,11 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <list>
 
 typedef std::vector<int> ROW;
 typedef std::vector< ROW > TABLE;
-typedef std::vector< TABLE > MATRIX;
+typedef std::list< TABLE > MATRIX;
 
 struct BOUNDS {
 	int left_col;
