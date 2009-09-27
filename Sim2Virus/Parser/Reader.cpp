@@ -25,12 +25,12 @@ void read_input_data(MATRIX& dataset, char const *filename) {
                 current = getc_unlocked(input);
 				continue;
             case 10:
-                if(previous == 10 && 0 != table.size()) {
+                if(previous == 10 && !table.empty()) {
                 	dataset.push_back(table);
 	                table = TABLE();
 					goto loop_end2;
 	            }
-				if(0 != row.size()) {
+				if(!row.empty()) {
 					table.push_back(row);
 	                row = ROW();
 				}
