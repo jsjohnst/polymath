@@ -3,13 +3,12 @@ using namespace std;
 
 void output_dataset(const char *filename, const MATRIX& matrix, const BOUNDS& min_bounds) {
 	ofstream output(filename);
-	TABLE table;
 	
-	MATRIX::const_iterator matrix_iterator = matrix.begin();	
+	MATRIX::const_iterator matrix_iterator = matrix.begin();
+	MATRIX::const_iterator matrix_end = matrix.end();	
 	
-	while(matrix_iterator != matrix.end()) {
-		table = *matrix_iterator;
-		output_table(output, table, min_bounds);
+	while(matrix_iterator != matrix_end) {
+		output_table(output, *matrix_iterator, min_bounds);
 		++matrix_iterator;
 	}
 	
@@ -18,14 +17,13 @@ void output_dataset(const char *filename, const MATRIX& matrix, const BOUNDS& mi
 
 void output_table(ostream& output, const TABLE& table, const BOUNDS& min_bounds) {
 	int row_count = 0;
-	ROW row;
 	
-	TABLE::const_iterator table_iterator = table.begin();	
+	TABLE::const_iterator table_iterator = table.begin();
+	TABLE::const_iterator table_end = table.end();	
 	
-	while(table_iterator != table.end()) {
+	while(table_iterator != table_end) {
 		if(row_count >= min_bounds.first_row && row_count <= min_bounds.last_row) {
-			row = *table_iterator;
-			output_row(output, row, min_bounds.left_col, min_bounds.right_col);
+			output_row(output, *table_iterator, min_bounds.left_col, min_bounds.right_col);
 		}
 		if(row_count > min_bounds.last_row) {
 			break;
@@ -38,14 +36,13 @@ void output_table(ostream& output, const TABLE& table, const BOUNDS& min_bounds)
 }
 
 void output_row(ostream& output, const ROW& row, const int& start, const int& end) {
-	int column = 0;
 	int column_count = 0;
-	ROW::const_iterator row_iterator = row.begin();	
+	ROW::const_iterator row_iterator = row.begin();
+	ROW::const_iterator row_end = row.end();	
 	
-	while(row_iterator != row.end()) {
+	while(row_iterator != row_end) {
 		if(column_count >= start && column_count <= end) {
-			column = *row_iterator;
-			output << column << " ";
+			output << (*row_iterator) << " ";
 		}
 		if(column_count > end) {
 			return;
