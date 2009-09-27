@@ -3,8 +3,8 @@ using namespace std;
 
 MATRIX read_input_data(const char *filename) {
 	MATRIX dataset;
-	char current = NULL;
-	char previous = NULL;
+	char current = 0;
+	char previous = 0;
 	ifstream inputstream;
 
 	inputstream.open(filename);

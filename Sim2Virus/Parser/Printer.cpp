@@ -38,7 +38,7 @@ void output_table(ostream& output, const TABLE& table, BOUNDS min_bounds) {
 }
 
 void output_row(ostream& output, const ROW& row, int start, int end) {
-	int column = NULL;
+	int column = 0;
 	int column_count = 0;
 	ROW::const_iterator row_iterator = row.begin();	
 	
@@ -54,3 +54,5 @@ void output_row(ostream& output, const ROW& row, int start, int end) {
 		++row_iterator;
 	}
 }
+
+
