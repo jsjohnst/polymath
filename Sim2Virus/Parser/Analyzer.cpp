@@ -12,20 +12,18 @@ BOUNDS find_table_bounds(const TABLE& table) {
 	BOUNDS bounds;
 	init_bounds(&bounds);
 	
-	TABLE::const_iterator table_iterator = table.begin();	
-	ROW row;
+	TABLE::const_iterator table_iterator = table.begin();
+	TABLE::const_iterator table_end = table.end();	
 	ROW::const_iterator row_iterator;
-	int column;
+	ROW::const_iterator row_end;
 	int row_count = 0;
 	int col_count = 0;
 	
-	while(table_iterator != table.end()) {
-		row = *table_iterator;
-		row_iterator = row.begin();	
-		while(row_iterator != row.end()) {
-			column = *row_iterator;
-
-			if(column > 0) {
+	while(table_iterator != table_end) {
+		row_iterator = (*table_iterator).begin();	
+		row_end = (*table_iterator).end();
+		while(row_iterator != row_end) {
+			if(*row_iterator > 0) {
 				if(col_count < bounds.left_col) {
 					bounds.left_col = col_count;
 				}
@@ -57,14 +55,11 @@ BOUNDS find_largest_table_bounds(const MATRIX& matrix) {
 	init_bounds(&bounds);
 	BOUNDS ret;
 	init_bounds(&ret);
-	TABLE table;
 	
 	MATRIX::const_iterator matrix_iterator = matrix.begin();	
 	
 	while(matrix_iterator != matrix.end()) {
-		table = *matrix_iterator;
-		
-		bounds = find_table_bounds(table);
+		bounds = find_table_bounds(*matrix_iterator);
 		
 		if(bounds.left_col < ret.left_col) {
 			ret.left_col = bounds.left_col;
