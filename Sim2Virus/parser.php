@@ -3,9 +3,9 @@
 $tables = array();
 $table = array();
 
-print("Starting data loading\n");
+print("Starting data loading from: " . $_SERVER["argv"][1] . "\n");
 
-foreach(file("data.txt") as $line) {
+foreach(file($_SERVER["argv"][1]) as $line) {
 	if(trim($line) == "") {
 		$tables[] = serialize($table);
 		$table = array();
