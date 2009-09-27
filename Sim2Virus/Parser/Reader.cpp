@@ -1,56 +1,65 @@
 #include "Parser.h"
 #include <stdlib.h>
+#include <fcntl.h>
 using namespace std;
 
-void read_input_data(MATRIX& dataset, char const *filename) {
-	auto char current = 0;
-	auto char previous = 0;
+#define BUFFER_SIZE 65536
+char buffer[BUFFER_SIZE+1] = {0};
 
-    FILE* input = fopen(filename, "r");
+void read_input_data(MATRIX& dataset, char const *filename) {
+	char previous = 0;
+	char *current = 0;
+	char *end = 0;
+	int input = 0;
+
+    ROW row = ROW();
+    TABLE table = TABLE();
+
+	input = open(filename, O_RDONLY);
 	if(!input) {
 		cerr << "couldn't read from: " << filename << endl;
 		exit(2);
 	}
 
-    ROW row = ROW();
-    TABLE table = TABLE();
+	while( int length = read(input, buffer, BUFFER_SIZE) ) {
+		current = buffer;
+		end = buffer + length;
 
-    current = getc_unlocked(input);
+		while(current < end) {
+        	switch (*current) {
+            	case 32:
+					++current;
+					continue;
+           		case 10:
+                	if(previous == 10 && !table.empty()) {
+                		dataset.push_back(table);
+	                	table = TABLE();
+						++current;
+						continue;
+	            	}
+					if(!row.empty()) {
+						table.push_back(row);
+	                	row.clear();
+					}
+					previous = *current;
+					++current;
+					continue;
+            	case 48:
+                	row.push_back(0);
+                	break;
+            	case 49:
+                	row.push_back(1);
+                	break;
+            	case 50:
+               		row.push_back(2);
+                	break;
+        	}
+			previous = *current;
+			++current;
+    	}
 
-	// this works despite current defined as a char
-	// bad practice, yes, but works for our needs
-    while( current != EOF ) {
-        switch (current) {
-            case 32:
-                current = getc_unlocked(input);
-				continue;
-            case 10:
-                if(previous == 10 && !table.empty()) {
-                	dataset.push_back(table);
-	                table = TABLE();
-					goto loop_end2;
-	            }
-				if(!row.empty()) {
-					table.push_back(row);
-	                row.clear();
-				}
-				goto loop_end;
-            case 48:
-                row.push_back(0);
-                break;
-            case 49:
-                row.push_back(1);
-                break;
-            case 50:
-                row.push_back(2);
-                break;
-        }
-
-loop_end:		
-        previous = current;
-loop_end2:
-        current = getc_unlocked(input);
-    }
-
-    fclose(input);
+		bzero(buffer, BUFFER_SIZE);
+	}
+	
+    close(input);
 }
