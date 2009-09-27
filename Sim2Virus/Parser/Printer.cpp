@@ -1,7 +1,7 @@
 #include "Parser.h"
 using namespace std;
 
-void output_dataset(const char *filename, const MATRIX& matrix, BOUNDS min_bounds) {
+void output_dataset(const char *filename, const MATRIX& matrix, const BOUNDS& min_bounds) {
 	ofstream output(filename);
 	TABLE table;
 	
@@ -16,7 +16,7 @@ void output_dataset(const char *filename, const MATRIX& matrix, BOUNDS min_bound
 	output.close();
 }
 
-void output_table(ostream& output, const TABLE& table, BOUNDS min_bounds) {
+void output_table(ostream& output, const TABLE& table, const BOUNDS& min_bounds) {
 	int row_count = 0;
 	ROW row;
 	
@@ -37,7 +37,7 @@ void output_table(ostream& output, const TABLE& table, BOUNDS min_bounds) {
 	output << endl;	
 }
 
-void output_row(ostream& output, const ROW& row, int start, int end) {
+void output_row(ostream& output, const ROW& row, const int& start, const int& end) {
 	int column = 0;
 	int column_count = 0;
 	ROW::const_iterator row_iterator = row.begin();	

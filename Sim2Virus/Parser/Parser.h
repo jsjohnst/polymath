@@ -13,12 +13,12 @@ struct BOUNDS {
 	int last_row;
 };
 
-MATRIX read_input_data(const char *filename);
+void read_input_data(MATRIX& dataset, char const *filename);
 BOUNDS find_table_bounds(const TABLE& table);
 BOUNDS find_largest_table_bounds(const MATRIX& matrix);
 void init_bounds(BOUNDS *bounds);
-void output_dataset(const char *filename, const MATRIX& dataset, BOUNDS min_bounds);
-void output_table(std::ostream& output, const TABLE& table, BOUNDS min_bounds);
-void output_row(std::ostream& output, const ROW& row, int start, int end);
+void output_dataset(const char *filename, const MATRIX& dataset, const BOUNDS& min_bounds);
+void output_table(std::ostream& output, const TABLE& table, const BOUNDS& min_bounds);
+void output_row(std::ostream& output, const ROW& row, const int& start, const int& end);
 
 

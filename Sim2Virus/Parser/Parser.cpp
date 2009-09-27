@@ -1,7 +1,7 @@
 #include "Parser.h"
 using namespace std;
 
-int main (int argc, const char **argv)
+int main (const int argc, const char **argv)
 {
 	if(argc != 3) {
 		cerr << "Usage: " << argv[0] << " <input> <output>" << endl;
@@ -13,7 +13,8 @@ int main (int argc, const char **argv)
 	
 	cout << "Reading input from: " << input_filename << endl;
 	
-	const MATRIX& dataset = read_input_data(input_filename);
+	MATRIX dataset = MATRIX();
+	read_input_data(dataset, input_filename);
 	
 	cout << "Found " << dataset.size() << " time courses." << endl;
 	

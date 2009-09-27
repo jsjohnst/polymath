@@ -1,8 +1,8 @@
 #include "Parser.h"
+#include <stdlib.h>
 using namespace std;
 
-MATRIX read_input_data(const char *filename) {
-	MATRIX dataset;
+void read_input_data(MATRIX& dataset, char const *filename) {
 	int current = 0;
 	int previous = 0;
 
@@ -35,13 +35,13 @@ MATRIX read_input_data(const char *filename) {
 				goto loop_end;
             case 48:
                 row.push_back(0);
-                goto loop_end;
+                break;
             case 49:
                 row.push_back(1);
-                goto loop_end;
+                break;
             case 50:
                 row.push_back(2);
-                goto loop_end;
+                break;
         }
 
 loop_end:		
@@ -51,6 +51,4 @@ loop_end2:
     }
 
     fclose(input);
-	
-	return dataset;
 }
