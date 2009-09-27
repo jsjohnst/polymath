@@ -13,7 +13,7 @@ int main (int argc, char **argv)
 	
 	cout << "Reading input from: " << input_filename << endl;
 	
-	MATRIX dataset = read_input_data(input_filename);
+	const MATRIX& dataset = read_input_data(input_filename);
 	
 	cout << "Found " << dataset.size() << " time courses." << endl;
 	
