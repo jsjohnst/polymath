@@ -1,15 +1,15 @@
 #include "Parser.h"
 using namespace std;
 
-int main (int argc, char **argv)
+int main (int argc, const char **argv)
 {
 	if(argc != 3) {
 		cerr << "Usage: " << argv[0] << " <input> <output>" << endl;
 		return 1;
 	}
 	
-	char *input_filename = argv[1];
-	char *output_filename = argv[2];
+	const char *input_filename = argv[1];
+	const char *output_filename = argv[2];
 	
 	cout << "Reading input from: " << input_filename << endl;
 	

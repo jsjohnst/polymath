@@ -1,7 +1,7 @@
 #include "Parser.h"
 using namespace std;
 
-void output_dataset(char *filename, const MATRIX& matrix, BOUNDS min_bounds) {
+void output_dataset(const char *filename, const MATRIX& matrix, BOUNDS min_bounds) {
 	ofstream output(filename);
 	TABLE table;
 	
@@ -9,14 +9,14 @@ void output_dataset(char *filename, const MATRIX& matrix, BOUNDS min_bounds) {
 	
 	while(matrix_iterator != matrix.end()) {
 		table = *matrix_iterator;
-		output_table(&output, table, min_bounds);
+		output_table(output, table, min_bounds);
 		++matrix_iterator;
 	}
 	
 	output.close();
 }
 
-void output_table(ostream *output, const TABLE& table, BOUNDS min_bounds) {
+void output_table(ostream& output, const TABLE& table, BOUNDS min_bounds) {
 	int row_count = 0;
 	ROW row;
 	
@@ -34,10 +34,10 @@ void output_table(ostream *output, const TABLE& table, BOUNDS min_bounds) {
 		++table_iterator;
 	}
 	
-	(*output) << endl;	
+	output << endl;	
 }
 
-void output_row(ostream *output, const ROW& row, int start, int end) {
+void output_row(ostream& output, const ROW& row, int start, int end) {
 	int column = NULL;
 	int column_count = 0;
 	ROW::const_iterator row_iterator = row.begin();	
@@ -45,7 +45,7 @@ void output_row(ostream *output, const ROW& row, int start, int end) {
 	while(row_iterator != row.end()) {
 		if(column_count >= start && column_count <= end) {
 			column = *row_iterator;
-			(*output) << column << " ";
+			output << column << " ";
 		}
 		if(column_count > end) {
 			return;

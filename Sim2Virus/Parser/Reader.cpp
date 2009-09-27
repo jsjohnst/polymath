@@ -1,7 +1,7 @@
 #include "Parser.h"
 using namespace std;
 
-MATRIX read_input_data(char *filename) {
+MATRIX read_input_data(const char *filename) {
 	MATRIX dataset;
 	char current = NULL;
 	char previous = NULL;
