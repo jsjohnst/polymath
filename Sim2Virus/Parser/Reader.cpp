@@ -22,14 +22,13 @@ MATRIX read_input_data(const char *filename) {
 						dataset.push_back(table);
 			        	table = TABLE();
 					}
-		        	continue;
+					break;
 		        }
-		        previous = current;
 				if(row.size() > 0) {
 					table.push_back(row);
 			        row = ROW();
 				}
-		        continue;
+		        break;
 			case 48:
 		        row.push_back(0);
 		        break;
