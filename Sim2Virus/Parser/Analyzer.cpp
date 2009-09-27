@@ -8,13 +8,13 @@ void init_bounds(BOUNDS *bounds) {
 	(*bounds).last_row = 0;
 }
 
-BOUNDS find_table_bounds(TABLE table) {
+BOUNDS find_table_bounds(const TABLE& table) {
 	BOUNDS bounds;
 	init_bounds(&bounds);
 	
-	TABLE::iterator table_iterator = table.begin();	
+	TABLE::const_iterator table_iterator = table.begin();	
 	ROW row;
-	ROW::iterator row_iterator;
+	ROW::const_iterator row_iterator;
 	int column;
 	int row_count = 0;
 	int col_count = 0;
@@ -52,14 +52,14 @@ BOUNDS find_table_bounds(TABLE table) {
 	return bounds;
 }
 
-BOUNDS find_largest_table_bounds(MATRIX matrix) {
+BOUNDS find_largest_table_bounds(const MATRIX& matrix) {
 	BOUNDS bounds;
 	init_bounds(&bounds);
 	BOUNDS ret;
 	init_bounds(&ret);
 	TABLE table;
 	
-	MATRIX::iterator matrix_iterator = matrix.begin();	
+	MATRIX::const_iterator matrix_iterator = matrix.begin();	
 	
 	while(matrix_iterator != matrix.end()) {
 		table = *matrix_iterator;

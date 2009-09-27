@@ -14,9 +14,9 @@ struct BOUNDS {
 };
 
 MATRIX read_input_data(char *filename);
-BOUNDS find_table_bounds(TABLE table);
-BOUNDS find_largest_table_bounds(MATRIX matrix);
+BOUNDS find_table_bounds(const TABLE& table);
+BOUNDS find_largest_table_bounds(const MATRIX& matrix);
 void init_bounds(BOUNDS *bounds);
-void output_dataset(char *filename, MATRIX dataset, BOUNDS min_bounds);
-void output_table(std::ostream *output, TABLE table, BOUNDS min_bounds);
-void output_row(std::ostream *output, ROW row, int start, int end);
+void output_dataset(char *filename, const MATRIX& dataset, BOUNDS min_bounds);
+void output_table(std::ostream *output, const TABLE& table, BOUNDS min_bounds);
+void output_row(std::ostream *output, const ROW& row, int start, int end);
