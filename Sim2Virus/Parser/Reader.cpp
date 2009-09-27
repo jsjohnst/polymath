@@ -32,7 +32,7 @@ void read_input_data(MATRIX& dataset, char const *filename) {
 	            }
 				if(!row.empty()) {
 					table.push_back(row);
-	                row = ROW();
+	                row.clear();
 				}
 				goto loop_end;
             case 48:
