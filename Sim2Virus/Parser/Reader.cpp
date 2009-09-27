@@ -3,8 +3,8 @@
 using namespace std;
 
 void read_input_data(MATRIX& dataset, char const *filename) {
-	int current = 0;
-	int previous = 0;
+	auto char current = 0;
+	auto char previous = 0;
 
     FILE* input = fopen(filename, "r");
 	if(!input) {
