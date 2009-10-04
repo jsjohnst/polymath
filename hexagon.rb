@@ -38,6 +38,7 @@ class Grid
 	  @rings.length - 1
 	end
 
+  # makes a copy of @rings
 	def getCurrentState
 		state = Array.new
 		for i in 0..@rings.length-1
@@ -48,6 +49,7 @@ class Grid
 		state
 	end
 	
+  # update cell state nondeterministic 
 	def newCellState(currentState, neighbors)
 	  random = rand(7)
 	  if random == 6 

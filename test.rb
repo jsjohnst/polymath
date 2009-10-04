@@ -8,11 +8,11 @@ arr=state
 tmp = Array.new
 for i in 0..arr.length-1 do 
   if arr[i] == 1
-    tmp[i] = bold, green, "+", reset 
+    tmp[i] = on_black, bold, green, "+", reset, on_black 
   elsif arr[i] == 2 
-    tmp[i] = bold, red, "+", reset 
+    tmp[i] = on_black, bold, red, "+", reset, on_black 
   else
-    tmp[i] = " "
+    tmp[i] = on_black, " ", reset, on_black
   end
 end
 
@@ -80,6 +80,7 @@ for i in 0..grid.size-1 do
   puts
 end
 
+puts reset
 puts state.to_s
 puts
 
@@ -88,7 +89,9 @@ end
 foo = [1,1,0,0,2,2,1,1]
 bar = Grid.new(foo)
 
-for i in 1..10
+for i in 1..12
 	print_array bar.getRingCount, bar.getCurrentState
 	bar = bar.getIteratedGrid
 end
+  
+puts reset
