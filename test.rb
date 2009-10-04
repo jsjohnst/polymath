@@ -1,5 +1,5 @@
 require "hexagon.rb"
-foo = [1,1,1,1,1,1,1,1]
+foo = [1,1,0,0,2,2,1,1]
 bar = Grid.new(foo)
 
 for i in 1..10
