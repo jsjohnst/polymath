@@ -43,45 +43,65 @@ class Grid
 		end
 		state
 	end
+	
+	def newCellState(currentState, neighbors)
+	  random = rand(7)
+	  if random == 6 
+	    return currentState
+	  else
+	    states = Array.new
+	    for i in 0..neighbors.length-1
+	      neighbor = neighbors[i]
+	      if neighbor[0] < @rings.length && neighbor[1] < @rings[neighbor[0]].length
+  	      if @rings[neighbor[0]][neighbor[1]].state > 0
+  	        # making virus infected states twice as likely to be picked
+  	        states.push @rings[neighbor[0]][neighbor[1]].state
+  	        states.push @rings[neighbor[0]][neighbor[1]].state
+  	      else
+  	        states.push @rings[neighbor[0]][neighbor[1]].state
+  	      end
+  	    end
+	    end
+	    
+	    return states[rand(states.length)]
+	  end
+	end
 
 	def getIteratedGrid
 		newGrid = self.clone
-		for i in 0..newGrid.rings.length
-			for j in 0..newGrid.rings[i].length
+		newGrid.rings[newGrid.rings.length] = Array.new
+		for pos in 0..(newGrid.rings.length-1)*6
+			newGrid.rings[newGrid.rings.length-1][pos] = Cell.new(-1)
+		end
+		for i in 0..newGrid.rings.length - 1
+			for j in 0..newGrid.rings[i].length - 1
 				neighbors = findCellNeighbors(i,j)
-				randomCell = rand(7)
-				# if randomCell == 6, then we selected ourselves, 
-				# so no need to change state in new grid
-				if(randomCell != 6)
-					coords = neighbors[randomCell]
-					ring = coords[0]
-					ringPos = coords[1]
-					if newGrid.rings.length <= ring
-						newGrid.rings[ring] = Array.new
-						for k in 0..ring*6-1
-							newGrid.rings[ring][k] = Cell.new(-1)
-						end
-					end
-					if @rings.length <= ring || @rings[ring].length <= ringPos
-						state = 0
-					else
-						state = @rings[ring][ringPos].state
-					end
-					if(state > 0)
-						newGrid.rings[i][j].state = state
-					end
+				
+				newState = newCellState(@rings[i][j].state, neighbors)
+				
+				if(newState >= 0)
+					newGrid.rings[i][j].state = newState
 				end
 			end
 		end
-		allNonBorn = true
-		for i in 0..newGrid.rings[newGrid.rings.length-1].length-1
-			if newGrid.rings[newGrid.rings.length-1][i].state != -1
-				allNonBorn = false
-				break
-			end
-		end
-		if allNonBorn
-			newGrid.rings.pop
+		ringCount = newGrid.rings.length-1
+		for i in 0..ringCount
+				if i >= newGrid.rings.length
+					break
+				end
+				allNonInfected = true
+				for j in 0..newGrid.rings[i].length-1
+					if newGrid.rings[i][j].state > 0 
+						allNonInfected = false
+					end
+					if newGrid.rings[i][j].state < 0
+						newGrid.rings[i][j].state = 0
+					end
+				end
+				if allNonInfected
+					newGrid.rings.pop
+					ringCount = ringCount - 1
+				end
 		end
 		newGrid
 	end
