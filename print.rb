@@ -2,17 +2,15 @@ require "rubygems"
 require 'term/ansicolor'
 include Term::ANSIColor
 
- puts red, "Hello", blue, "World", black
 
-arr = [1,2,1,2,1,1,0, 1,1,2,0,1,1,0,1,1,0,1,1, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0]
-arr = [0,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3]
+arr = [1,2,1,2,1,1,0, 1,1,2,0,1,1,0,1,1,0,1,1, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 1,2,2,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0]
 
 tmp = Array.new
 for i in 0..arr.length-1 do 
   if arr[i] == 1
-    tmp[i] = green, "+", black
-  elsif arr[i]== 2 
-    tmp[i] = red, "+", black
+    tmp[i] = bold, green, "+", reset 
+  elsif arr[i] == 2 
+    tmp[i] = bold, red, "+", reset 
   else
     tmp[i] = " "
   end
@@ -20,12 +18,10 @@ end
 
 arr=tmp
 
-arr.length
-
-(arr.length - 1) /6
+puts arr.length
 
 
-N = 12
+N = 14
 grid = Array.new(N)
 for i in 0..grid.length do
   grid[i]=Array.new(N," ")
@@ -37,7 +33,7 @@ i=center # vertical index
 j=center # horizontal index
 grid[i][j] = arr.shift
 
-for currentRing in 1..3 do 
+for currentRing in 1..4 do 
   i = center-2*currentRing
   j = center
   # up and direction 0
