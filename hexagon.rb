@@ -33,6 +33,10 @@ class Grid
 			end
 		end
 	end
+	
+	def getRingCount
+	  @rings.length - 1
+	end
 
 	def getCurrentState
 		state = Array.new
