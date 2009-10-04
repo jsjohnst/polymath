@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Sim2Virus" default="compile" basedir=".">
+<project name="Sim2Virus" default="run" basedir=".">
     <property name="src" location="src"/> <!-- java source folder -->
     <property name="bin" location="bin"/> <!-- java bin -->
 	<property name="build" location="build"/> <!-- intermediate build products -->

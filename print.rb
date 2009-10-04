@@ -1,18 +1,25 @@
-#!/usr/bin/env ruby
-
+require "rubygems"
 require 'term/ansicolor'
 include Term::ANSIColor
 
- p red, "Hello", blue, "World"
-
-print "33[32m Connecting"
-# Actual work
-puts "Importing categories [ e[32mDONEe[0m ]"
-# Actual work
-puts "Importing tags       [e[31mFAILEDe[0m]"
+ puts red, "Hello", blue, "World", black
 
 arr = [1,2,1,2,1,1,0, 1,1,2,0,1,1,0,1,1,0,1,1, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0]
 arr = [0,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3]
+
+tmp = Array.new
+for i in 0..arr.length-1 do 
+  if arr[i] == 1
+    tmp[i] = green, "+", black
+  elsif arr[i]== 2 
+    tmp[i] = red, "+", black
+  else
+    tmp[i] = " "
+  end
+end
+
+arr=tmp
+
 arr.length
 
 (arr.length - 1) /6
