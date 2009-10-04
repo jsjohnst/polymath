@@ -33,7 +33,7 @@ i=center # vertical index
 j=center # horizontal index
 grid[i][j] = arr.shift
 
-for currentRing in 1..4 do 
+for currentRing in 1..3 do 
   i = center-2*currentRing
   j = center
   # up and direction 0
