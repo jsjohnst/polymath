@@ -82,6 +82,14 @@ end
 
 puts reset
 puts state.to_s
+
+output_file = File.new("output.txt", "w")
+N=1
+#calculate how many elements to print for 3 ring
+for i in 1..3 
+  N += i*6
+end
+output_file.puts state.first(N).to_s
 puts
 
 end
@@ -89,7 +97,7 @@ end
 foo = [1,1,0,0,2,2,1,1]
 bar = Grid.new(foo)
 
-for i in 1..12
+for i in 1..7
 	print_array bar.getRingCount, bar.getCurrentState
 	bar = bar.getIteratedGrid
 end
