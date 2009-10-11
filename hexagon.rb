@@ -59,13 +59,9 @@ class Grid
 	    for i in 0..neighbors.length-1
 	      neighbor = neighbors[i]
 	      if neighbor[0] < @rings.length && neighbor[1] < @rings[neighbor[0]].length
-  	      if @rings[neighbor[0]][neighbor[1]].state > 0
-  	        # making virus infected states twice as likely to be picked
-  	        states.push @rings[neighbor[0]][neighbor[1]].state
-  	        states.push @rings[neighbor[0]][neighbor[1]].state
-  	      else
-  	        states.push @rings[neighbor[0]][neighbor[1]].state
-  	      end
+          # push each surrounding state with equal probability to achieve a
+          # function stochastic network in the traditional sense
+          states.push @rings[neighbor[0]][neighbor[1]].state
   	    end
 	    end
 	    
