@@ -18,5 +18,9 @@ for i in 1..10
 end
 output.close
 
+  macaulay("sgfan.m2", "sgfan(///../htdocs/#{discretized_file}///,
+  ///../htdocs/#{functionfile}///, #{@job.pvalue}, #{@job.nodes})")
+
+
 
 
