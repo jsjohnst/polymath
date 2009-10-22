@@ -104,7 +104,7 @@ for i in 1..3
 end
 
 
-for i in 1..7
+for i in 1..15
 	print_array bar.getRingCount, bar.getCurrentState
 	bar = bar.getIteratedGrid
 end
