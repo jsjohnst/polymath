@@ -40,7 +40,14 @@ class Grid
 
   # makes a copy of @rings
 	def getCurrentState
-    @rings
+		state = Array.new
+		for i in 0..@rings.length-1
+      state[i] = Array.new
+			for j in 0..@rings[i].length-1
+				state[i].push @rings[i][j].state
+			end
+		end
+		state
 	end
 	
   # update cell state nondeterministic 

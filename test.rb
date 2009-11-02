@@ -1,112 +1,84 @@
 require "hexagon.rb"
 require "rubygems"
-require 'term/ansicolor'
-include Term::ANSIColor
+require "rmagick"
 
-def print_array(rings, state)
-  arr=state  
-  tmp = Array.new
-  for i in 0..arr.length-1 do 
-    if arr[i] == 1
-      tmp[i] = on_black, bold, green, "+", reset, on_black 
-    elsif arr[i] == 2 
-      tmp[i] = on_black, bold, red, "+", reset, on_black 
-    else
-      tmp[i] = on_black, " ", reset, on_black
-    end
-  end
+@gc = Magick::Draw.new
 
-  arr=tmp
-
-
-  n = rings*6+3
-  grid = Array.new(n)
-  for i in 0..grid.length do
-    grid[i]=Array.new(n," ")
-  end
-  center = n/2
-
-  # positions on grid when running through it in circles
-  i=center # vertical index
-  j=center # horizontal index
-  grid[i][j] = arr.shift
-
-  for currentRing in 1..rings do 
-    i = center-2*currentRing
-    j = center
-    # up and direction 0
-    # we start above the center and go down diagonally
-    for k in 1..(currentRing) do
-      grid[i][j] = arr.shift
-      i += 1
-      j += 1
-    end
-    # direction 2
-    # we go straight down on the right side
-    for k in 1..(currentRing) do 
-      grid[i][j]= arr.shift
-      i += 2
-    end
-    # direction 3
-    for k in 1..(currentRing) do 
-      grid[i][j]= arr.shift
-      i += 1 
-      j -= 1 
-    end
-
-    # direction 4
-    for k in 1..(currentRing) do 
-      grid[i][j]= arr.shift
-      i -= 1 
-      j -= 1 
-    end
-    # direction 5, straight up
-    for k in 1..(currentRing) do 
-      grid[i][j]= arr.shift
-      i -= 2 
-    end
-    # direction 4
-    for k in 1..(currentRing) do 
-      grid[i][j]= arr.shift
-      i -= 1 
-      j += 1 
-    end
-  end
-
-  for i in 0..grid.size-1 do 
-    for j in 0..grid.size-1 do 
-      print "#{grid[i][j]} "
-    end
-    puts
-  end
-
-  puts reset
-  puts state.to_s
-
-  if state.length < @n_ring
-    for i in state.length..@n_ring-1
-      state[i]=0
-    end
-  end
-  @output_file.puts state.first(@n_ring).to_s
-  puts
-
+def draw_hex(x,y, code) 
+  color = code == 0 ? "white" : code == 1 ? "green" : "red"
+  @gc.fill(color)
+  @gc.polygon(x,    y,     
+    x+6, y,
+    x+9, y+5.2,
+    x+6, y+10.4,
+    x, y+10.4,
+    x-3, y+5.2)
 end
 
-foo = [1,1,0,0,2,2,1,1]
-bar = Grid.new(foo)
-  
-@output_file = File.new("output.txt", "w")
-@n_ring = 1
-#calculate how many elements to print for 3 ring
-for i in 1..3 
-  @n_ring += i*6
+def print_hex_gif(rings, gif_file)
+  number_of_cells = rings.flatten.size
+  puts number_of_cells
+  canvas_size = Math.sqrt(number_of_cells) * 20 
+  canvas = Magick::Image.new(canvas_size, canvas_size,
+  Magick::HatchFill.new('white', 'white'))
+
+  delta_x = 9
+  delta_y = 5.2
+  center_x = canvas_size/2 - delta_x / 3
+  center_y = canvas_size/2 - delta_y
+
+  rings.each_with_index do |color_array, i|
+    print color_array
+    if i == 0 
+      draw_hex(center_x, center_y, color_array.shift)
+      next
+    end
+      for j in 0..i-1 do 
+        draw_hex(center_x+ j*delta_x, center_y - i* 2 * delta_y + j*delta_y, color_array.shift)
+      end
+      for j in 0..i-1 do 
+        draw_hex(center_x + i* delta_x, center_y - i* delta_y + j*2*delta_y, color_array.shift)
+      end
+      for j in 0..i-1 do 
+        draw_hex(center_x + i* delta_x - j*delta_x, center_y + i* delta_y + j*delta_y, color_array.shift)
+      end
+      for j in 0..i-1 do 
+        draw_hex(center_x - j*delta_x, center_y + i*2*delta_y - j*delta_y, color_array.shift)
+      end
+      for j in 0..i-1 do 
+      draw_hex(center_x - i* delta_x, center_y + i*delta_y - j*2*delta_y, color_array.shift)
+      end
+      for j in 0..i-1 do 
+        draw_hex(center_x - i* delta_x + j*delta_x, center_y - i*delta_y - j*delta_y, color_array.shift)
+      end
+  end
+  @gc.draw(canvas)
+  canvas.write(gif_file)
 end
 
+def simulate_infection(initialization)
+  bar = Grid.new(initialization)
+    
+  100.times do 
+    bar = bar.getIteratedGrid
+  end
 
-for i in 1..15
-	print_array bar.getRingCount, bar.getCurrentState
-	bar = bar.getIteratedGrid
+  puts bar.getCurrentState.flatten.size
+  print_hex_gif(bar.getCurrentState, "timecourse.gif")
 end
-  
-puts reset
+
+## Initialize cells
+initializations = Array.new
+
+random_initialization= Array.new
+1500.times do 
+  random_initialization.push(rand(3))
+end
+initializations.push random_initialization
+
+
+
+1.times do 
+  # copy elements of foo for each run
+  initializations.each { |initialization|  simulate_infection(Array.new(initialization) ) }
+end
