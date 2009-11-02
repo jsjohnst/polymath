@@ -4,6 +4,12 @@ require "rmagick"
 
 @gc = Magick::Draw.new
 
+# Have red and green be twice as likely as healthy
+def weighted_rand
+  r = rand(5)
+  r < 1 ? 0 : r < 3 ? 1 : 2
+end
+
 def draw_hex(x,y, code) 
   color = code == 0 ? "white" : code == 1 ? "green" : "red"
   @gc.fill(color)
@@ -59,7 +65,7 @@ end
 def simulate_infection(initialization)
   bar = Grid.new(initialization)
     
-  100.times do 
+  50.times do 
     bar = bar.getIteratedGrid
   end
 
@@ -72,7 +78,8 @@ initializations = Array.new
 
 random_initialization= Array.new
 1500.times do 
-  random_initialization.push(rand(3))
+  #random_initialization.push(rand(3))
+  random_initialization.push(weighted_rand)
 end
 initializations.push random_initialization
 
