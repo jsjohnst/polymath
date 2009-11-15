@@ -65,7 +65,7 @@ end
 def simulate_infection(initialization)
   bar = Grid.new(initialization)
     
-  50.times do 
+  5.times do 
     bar = bar.getIteratedGrid
   end
 
@@ -76,8 +76,14 @@ end
 ## Initialize cells
 initializations = Array.new
 
+
+random_vector_size = 1
+for i in 1..2 do 
+  random_vector_size += 6*i
+end
+
 random_initialization= Array.new
-1500.times do 
+random_vector_size.times do 
   #random_initialization.push(rand(3))
   random_initialization.push(weighted_rand)
 end
